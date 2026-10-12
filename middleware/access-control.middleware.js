@@ -13,4 +13,24 @@ const isAuthenticated = expressAsyncHandler(async (req, res, next) => {
 	}
 });
 
-module.exports = { isAuthenticated };
+const isStaff = (req, res, next) => {
+	if (req.user.isStaff) return next();
+	res.status(403);
+	throw new Error("Forbidden resource");
+};
+
+const hasPermission = (permission) => {
+	return (req, res, next) => { 
+		// The ?. operator is called optional chaining. 
+		// It prevents JavaScript from throwing a TypeError 
+		// when req.user or req.user.Role is missing.
+		// Now, if the permission is missing or the role 
+		// is undefined, the middleware throws "Forbidden 
+		// resource" with HTTP status 403.
+		if (req.user.Role[permission]) return next();		
+		res.status(403);
+		throw new Error("Forbidden resource");
+	}
+};
+
+module.exports = { isAuthenticated, isStaff, hasPermission };

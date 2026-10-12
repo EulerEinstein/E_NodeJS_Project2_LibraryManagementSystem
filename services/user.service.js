@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Role } = require("../models");
 
 // Start with CRUD operations:
 const createNewUser = (body) => {
@@ -10,7 +10,9 @@ const findManyUsers = (searchParam) => {
 };
 
 const findUserById = async (id) => {
-	const user = await User.findByPk(id);
+	// include:[Role] - "When you find the User, 
+	// also find the Role that this User belongs to."
+	const user = await User.findByPk(id, { include: Role });
 	if (!user) throw new Error("User with specified id does not exist");
 	return user;
 };

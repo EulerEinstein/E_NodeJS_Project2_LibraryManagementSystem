@@ -37,6 +37,6 @@ app.use(errorHandler);
 
 app.listen(PORT, () => { 
     console.log("Server is running on port", PORT); 
-    db.sync();
+    db.sync({alter:true});
     db.authenticate()
 }); 
