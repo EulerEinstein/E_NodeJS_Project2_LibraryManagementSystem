@@ -20,4 +20,7 @@ const Role = roleModel(db);
 Role.hasMany(User, { foreignKey: "roleId" });
 User.belongsTo(Role, { foreignKey: "roleId" });
 
+User.hasMany(Book, { foreignKey: "borrowerId" });
+Book.belongsTo(User, { foreignKey: "borrowerId" });
+
 module.exports = { db, Book, User, Role };
