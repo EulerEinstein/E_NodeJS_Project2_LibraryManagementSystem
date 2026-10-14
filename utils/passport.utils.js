@@ -41,7 +41,7 @@ const initPassport = (passport) => {
     // So Passport stores user id e.g. 123 rather than storing the 
     // entire user object.
     passport.serializeUser((user, cb) => {
-        cb(null, user.id);
+        return cb(null, user.id);
     });
 					
     // Later, the user makes another request e.g. GET/profile.
@@ -49,7 +49,7 @@ const initPassport = (passport) => {
     // Now Passport needs to turn id 123 back into the user object.
     passport.deserializeUser(async (id, cb) => {
         const user = await findUserById(id);
-        cb(null, user);
+        return cb(null, user);
     });
 };
 				
