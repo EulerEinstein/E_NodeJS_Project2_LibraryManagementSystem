@@ -1,16 +1,21 @@
 const expressAsyncHandler = require("express-async-handler");
+const { findSessionById } = require("../services/session.service");
 
 // req → the incoming request
 // res → the response we can send back
 // next → a function that tells Express to continue to the next middleware/route handler
-// req.isAuthenticated() is normally provided by Passport.js.
-// It checks whether Passport has authenticated the current request.
 const isAuthenticated = expressAsyncHandler(async (req, res, next) => {
-	if (req.isAuthenticated()) {
-		return next();
-	} else { 
+	const session = await findSessionById(req.cookies.sessionId);
+
+	if (!session || session.expiresAt < new Date()) {
+		if (session) await session.destroy(); // remove the expired row
+		res.clearCookie("sessionId");
+		res.status(401);
 		throw new Error("User is not logged in");
 	}
+
+	req.user = session.User; // includes Role
+	next();
 });
 
 const isStaff = (req, res, next) => {
