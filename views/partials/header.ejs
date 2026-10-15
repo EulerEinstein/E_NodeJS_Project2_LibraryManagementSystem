@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><%= typeof title !== "undefined" ? title + " · " : "" %>Library</title>
+	<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="site-header">
+	<div class="wrap bar">
+		<a class="brand" href="/">Library</a>
+		<nav>
+			<% if (user) { %>
+				<a href="/books" class="<%= currentPath.startsWith('/books') ? 'active' : '' %>">Books</a>
+				<% if (can("canManageBooks")) { %><a href="/books/new">Add book</a><% } %>
+				<% if (can("canManageUsers") || can("canManageStaff")) { %>
+					<a href="/admin/users" class="<%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">Users</a>
+				<% } %>
+				<% if (can("canManageStaff")) { %>
+					<a href="/admin/roles" class="<%= currentPath.startsWith('/admin/roles') ? 'active' : '' %>">Roles</a>
+				<% } %>
+				<a href="/profile" class="<%= currentPath === '/profile' ? 'active' : '' %>"><%= user.username %></a>
+				<form action="/logout" method="post" class="inline"><button class="link" type="submit">Log out</button></form>
+			<% } else { %>
+				<a href="/login">Log in</a>
+				<a href="/signup" class="btn small">Sign up</a>
+			<% } %>
+		</nav>
+	</div>
+</header>
+<main class="wrap">
+<% if (flash) { %>
+	<div class="flash <%= flash.type %>" role="status"><%= flash.message %></div>
+<% } %>

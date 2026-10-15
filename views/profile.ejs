@@ -1,0 +1,21 @@
+<%- include("partials/header") %>
+<section class="card narrow">
+	<h1>My profile</h1>
+	<p class="muted">
+		<%= user.isStaff ? "Staff" : "Member" %>
+		<% if (user.Role) { %> · role: <strong><%= user.Role.name %></strong><% } %>
+	</p>
+	<form action="/profile" method="post" class="stack">
+		<label>Username
+			<input type="text" name="username" value="<%= user.username %>" required>
+		</label>
+		<label>Email
+			<input type="email" name="email" value="<%= user.email %>" required>
+		</label>
+		<label>New password <span class="muted">(leave empty to keep the current one)</span>
+			<input type="password" name="password" minlength="6" autocomplete="new-password">
+		</label>
+		<button class="btn" type="submit">Save changes</button>
+	</form>
+</section>
+<%- include("partials/footer") %>

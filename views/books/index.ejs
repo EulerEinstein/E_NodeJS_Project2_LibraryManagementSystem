@@ -1,0 +1,60 @@
+<%- include("../partials/header") %>
+<div class="page-head">
+	<h1>Books</h1>
+	<% if (can("canManageBooks")) { %><a class="btn" href="/books/new">Add book</a><% } %>
+</div>
+
+<form action="/books" method="get" class="search">
+	<input type="search" name="q" value="<%= q %>" placeholder="Search by title or author">
+	<button class="btn" type="submit">Search</button>
+	<% if (q) { %><a class="btn ghost" href="/books">Clear</a><% } %>
+</form>
+
+<% if (books.length === 0) { %>
+	<p class="empty"><%= q ? `No books match "${q}".` : "There are no books yet." %></p>
+<% } else { %>
+<div class="table-wrap">
+<table>
+	<thead>
+		<tr><th>Title</th><th>Author</th><th>Status</th><th class="right">Actions</th></tr>
+	</thead>
+	<tbody>
+	<% books.forEach((book) => { %>
+		<tr>
+			<td><strong><%= book.title %></strong></td>
+			<td><%= book.author %></td>
+			<td>
+				<% if (book.isAvailable) { %>
+					<span class="badge ok">Available</span>
+				<% } else { %>
+					<span class="badge out">On loan</span>
+					<% if (can("canLendBooks") && book.borrower) { %><span class="muted">to <%= book.borrower.username %></span><% } %>
+				<% } %>
+			</td>
+			<td class="right actions-cell">
+				<% if (can("canLendBooks")) { %>
+					<% if (book.isAvailable) { %>
+						<form action="/books/<%= book.id %>/lend" method="post" class="inline-form">
+							<select name="userId" required aria-label="Lend to">
+								<option value="">Lend to…</option>
+								<% borrowers.forEach((b) => { %><option value="<%= b.id %>"><%= b.username %></option><% }) %>
+							</select>
+							<button class="btn small" type="submit">Lend</button>
+						</form>
+					<% } else { %>
+						<form action="/books/<%= book.id %>/return" method="post" class="inline-form">
+							<button class="btn small ghost" type="submit">Return</button>
+						</form>
+					<% } %>
+				<% } %>
+				<% if (can("canManageBooks")) { %>
+					<a class="btn small ghost" href="/books/<%= book.id %>/edit">Edit</a>
+				<% } %>
+			</td>
+		</tr>
+	<% }) %>
+	</tbody>
+</table>
+</div>
+<% } %>
+<%- include("../partials/footer") %>

@@ -1,11 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { 
-	createNewBook, 
-	findManyBooks, 
-	findBookById,
-	findBookByIdAndUpdate, 
-	findBookByIdAndDelete 
-} = require("../services/book.service");
+const { createNewBook, findManyBooks, findBookByIdAndUpdate, findBookByIdAndDelete, lendBook, returnBook } = require("../services/book.service");
 
 const createBookHandler = asyncHandler(async (req, res) => {
 	const { title, author } = req.body;
@@ -31,33 +25,20 @@ const deleteBookHandler = asyncHandler(async (req, res) => {
 	res.status(202).json(book);
 });
 
+
 const bookLendingHandler = asyncHandler(async (req, res) => {
 	const { action, userId: borrowerId } = req.body;
+	if (!["lend", "return"].includes(action) || (action === "lend" && !borrowerId))
+		throw new Error("Bad request, action (lend or return) is required, and userId for lend");
 
-	if(!(action && borrowerId && ["lend", "return"].includes(action))) 
-		throw new Error("Bad request, action and userId are required");
-	
-	const book = await findBookById(req.params.id);
-	if(action === "lend") {
-		if (!book.isAvailable) throw new Error("Book is not available");
-		book.borrowerId = borrowerId;
-		book.isAvailable = false;
-	} else {
-		book.borrowerId = null;
-		book.isAvailable = true;
-	}
-
-	await book.save();
-	const updatedBook = await findBookById(book.id);
-	res.status(202).json(updatedBook);
+	const book = action === "lend" ? await lendBook(req.params.id, borrowerId) : await returnBook(req.params.id);
+	res.status(202).json(book);
 });
 
-
-
-module.exports = { 
+module.exports = {
+	bookLendingHandler, 
     createBookHandler, 
     getManyBooksHandler, 
     updateBookHandler, 
-    deleteBookHandler, 
-	bookLendingHandler
+    deleteBookHandler 
 };

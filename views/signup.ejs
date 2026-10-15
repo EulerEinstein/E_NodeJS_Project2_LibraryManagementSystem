@@ -1,0 +1,19 @@
+<%- include("partials/header") %>
+<section class="card narrow">
+	<h1>Create an account</h1>
+	<% if (error) { %><div class="flash error"><%= error %></div><% } %>
+	<form action="/signup" method="post" class="stack">
+		<label>Username
+			<input type="text" name="username" value="<%= values.username || '' %>" required autofocus>
+		</label>
+		<label>Email
+			<input type="email" name="email" value="<%= values.email || '' %>" required>
+		</label>
+		<label>Password <span class="muted">(at least 6 characters)</span>
+			<input type="password" name="password" minlength="6" required>
+		</label>
+		<button class="btn" type="submit">Sign up</button>
+	</form>
+	<p class="muted">Already registered? <a href="/login">Log in</a></p>
+</section>
+<%- include("partials/footer") %>

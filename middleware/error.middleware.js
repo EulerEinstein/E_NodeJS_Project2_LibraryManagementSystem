@@ -1,7 +1,9 @@
 const errorHandler = (err, req, res, next) => {
-	res.json({
+	// keep the status set by the controller/middleware (401, 403...), default to 500
+	const code = res.statusCode >= 400 ? res.statusCode : 500;
+	res.status(code).json({
 		Error: {
-			Code: 500,
+			Code: code,
 			message: err.message
 		}
 	})

@@ -1,0 +1,42 @@
+<%- include("../partials/header") %>
+<section class="card narrow">
+	<h1>Edit <%= person.username %></h1>
+	<form action="/admin/users/<%= person.id %>/edit" method="post" class="stack">
+		<% if (canEditDetails) { %>
+			<label>Username
+				<input type="text" name="username" value="<%= person.username %>" required>
+			</label>
+			<label>Email
+				<input type="email" name="email" value="<%= person.email %>" required>
+			</label>
+			<label>New password <span class="muted">(leave empty to keep)</span>
+				<input type="password" name="password" minlength="6" autocomplete="new-password">
+			</label>
+		<% } else { %>
+			<p class="muted"><%= person.email %></p>
+		<% } %>
+
+		<% if (canEditStaff) { %>
+			<label class="check">
+				<input type="checkbox" name="isStaff" <%= person.isStaff ? "checked" : "" %>>
+				Staff member
+			</label>
+			<label>Role
+				<select name="roleId">
+					<option value="">No role</option>
+					<% roles.forEach((r) => { %>
+						<option value="<%= r.id %>" <%= person.roleId === r.id ? "selected" : "" %>><%= r.name %></option>
+					<% }) %>
+				</select>
+			</label>
+		<% } else if (person.id === user.id) { %>
+			<p class="muted">You cannot change your own role or staff status.</p>
+		<% } %>
+
+		<div class="actions">
+			<button class="btn" type="submit">Save changes</button>
+			<a class="btn ghost" href="/admin/users">Cancel</a>
+		</div>
+	</form>
+</section>
+<%- include("../partials/footer") %>

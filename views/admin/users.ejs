@@ -1,0 +1,21 @@
+<%- include("../partials/header") %>
+<div class="page-head"><h1>Users</h1></div>
+<div class="table-wrap">
+<table>
+	<thead>
+		<tr><th>Username</th><th>Email</th><th>Type</th><th>Role</th><th class="right">Actions</th></tr>
+	</thead>
+	<tbody>
+	<% users.forEach((u) => { %>
+		<tr>
+			<td><strong><%= u.username %></strong><% if (u.id === user.id) { %> <span class="muted">(you)</span><% } %></td>
+			<td><%= u.email %></td>
+			<td><%= u.isStaff ? "Staff" : "Member" %></td>
+			<td><%= u.Role ? u.Role.name : "—" %></td>
+			<td class="right"><a class="btn small ghost" href="/admin/users/<%= u.id %>/edit">Edit</a></td>
+		</tr>
+	<% }) %>
+	</tbody>
+</table>
+</div>
+<%- include("../partials/footer") %>

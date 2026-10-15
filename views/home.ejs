@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<section class="hero">
+	<h1>Find it. Borrow it. Bring it back.</h1>
+	<p>A small library system for browsing books and keeping track of who has them.</p>
+	<p class="actions">
+		<% if (user) { %>
+			<a class="btn" href="/books">Browse books</a>
+		<% } else { %>
+			<a class="btn" href="/login">Log in</a>
+			<a class="btn ghost" href="/signup">Create an account</a>
+		<% } %>
+	</p>
+</section>
+<%- include("partials/footer") %>

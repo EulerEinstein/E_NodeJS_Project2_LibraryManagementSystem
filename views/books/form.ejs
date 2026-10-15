@@ -1,0 +1,25 @@
+<%- include("../partials/header") %>
+<section class="card narrow">
+	<h1><%= book ? "Edit book" : "Add book" %></h1>
+	<form action="<%= book ? `/books/${book.id}/edit` : '/books' %>" method="post" class="stack">
+		<label>Title
+			<input type="text" name="title" value="<%= book ? book.title : '' %>" required autofocus>
+		</label>
+		<label>Author
+			<input type="text" name="author" value="<%= book ? book.author : '' %>" required>
+		</label>
+		<div class="actions">
+			<button class="btn" type="submit"><%= book ? "Save changes" : "Add book" %></button>
+			<a class="btn ghost" href="/books">Cancel</a>
+		</div>
+	</form>
+
+	<% if (book) { %>
+		<hr>
+		<form action="/books/<%= book.id %>/delete" method="post"
+			onsubmit="return confirm('Delete this book? This cannot be undone.')">
+			<button class="btn danger" type="submit">Delete book</button>
+		</form>
+	<% } %>
+</section>
+<%- include("../partials/footer") %>

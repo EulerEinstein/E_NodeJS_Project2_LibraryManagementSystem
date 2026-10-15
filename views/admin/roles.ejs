@@ -1,0 +1,40 @@
+<%- include("../partials/header") %>
+<%
+	const labels = {
+		canLendBooks: "Lend books",
+		canManageBooks: "Manage books",
+		canManageStaff: "Manage staff",
+		canManageUsers: "Manage users",
+	};
+%>
+<div class="page-head"><h1>Roles</h1></div>
+
+<% roles.forEach((role) => { %>
+<section class="card role">
+	<form action="/admin/roles/<%= role.id %>" method="post" class="role-form">
+		<label>Name <input type="text" name="name" value="<%= role.name %>" required></label>
+		<div class="checks">
+			<% permissionFields.forEach((field) => { %>
+				<label class="check"><input type="checkbox" name="<%= field %>" <%= role[field] ? "checked" : "" %>> <%= labels[field] %></label>
+			<% }) %>
+		</div>
+		<button class="btn small" type="submit">Save</button>
+	</form>
+	<form action="/admin/roles/<%= role.id %>/delete" method="post" onsubmit="return confirm('Delete role &quot;<%= role.name %>&quot;?')">
+		<button class="btn small danger" type="submit">Delete</button>
+	</form>
+</section>
+<% }) %>
+
+<section class="card role new">
+	<form action="/admin/roles" method="post" class="role-form">
+		<label>New role <input type="text" name="name" placeholder="e.g. librarian" required></label>
+		<div class="checks">
+			<% permissionFields.forEach((field) => { %>
+				<label class="check"><input type="checkbox" name="<%= field %>"> <%= labels[field] %></label>
+			<% }) %>
+		</div>
+		<button class="btn small" type="submit">Create role</button>
+	</form>
+</section>
+<%- include("../partials/footer") %>

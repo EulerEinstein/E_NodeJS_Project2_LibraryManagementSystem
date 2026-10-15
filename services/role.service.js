@@ -6,7 +6,7 @@ const createNewRole = (body) => {
 };
 
 const findManyRoles = (searchParam) => {
-	return Role.findAll({ where: { ...searchParam  }});
+	return Role.findAll({ where: { ...searchParam  }, order: [["name", "ASC"]] });
 };
 
 const findRoleById = async (id) => {
